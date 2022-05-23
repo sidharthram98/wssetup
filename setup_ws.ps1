@@ -27,12 +27,21 @@ New-VMSwitch -Name "External Network" -NetAdapterName $netadapter.Name -AllowMan
 New-Item -Path "C:\VMs" -ItemType Directory
 Write-Output "C:\VMs Folder created."
 Write-Output "Downloading Ubuntu VHD..."
-Invoke-WebRequest -uri "https://aniccaautomation.blob.core.windows.net/vhd/UbuntuTemplate.vhdx" -OutFile "Ubuntu.vhdx"
+try 
+{
+    $response = Invoke-WebRequest -uri "https://aniccaautomation.blob.core.windows.net/vhd/UbuntuTemplate.vhdx" -OutFile "C:\VMs\Ubuntu.vhdx" -AsJob
+    $statusCode = $response.$statusCode
+
+} catch {
+    $statusCode = $_.Exception.Response.StatusCode.value__
+    Write-Output "Unable to download VHD from Source"
+    exit
+}
+$statusCode
 
 
 #Create VM
-New-VM -Name Ubuntu -MemoryStartupBytes 16GB -VHDPath "C:\VHD\Ubuntu.vhdx"
-Add-VMHardDiskDrive -VMName $VMName -Path "C:\VMs\Ubuntu.vhdx"
+New-VM -Name Ubuntu -MemoryStartupBytes 16GB -VHDPath "C:\VMs\Ubuntu.vhdx"
 
 
 #Query Device Location
@@ -64,5 +73,8 @@ Dismount-VMHostAssignableDevice -force -LocationPath $locationpath
 #Mount GPU to VM
 Write-Host "Mountin GPU to VM"
 Add-VMAssignableDevice -LocationPath $locationPath -VMName $VMName
+Get-VMNetworkAdapter -VMName $VMName | Connect-VMNetworkAdapter -SwitchName "External Network"
+
 
 #Start VM
+Start-VM -Name $VMName
