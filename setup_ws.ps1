@@ -18,11 +18,6 @@ else
     Write-Output "Hyper-V role detected."
 }
 
-#Check vSwitch
-$netadapter = Get-NetAdapter -physical | where status -eq "up"
-Write-Host "Creating Virtual Switch using" $netadapter.Name "Adapter"
-New-VMSwitch -Name "External Network" -NetAdapterName $netadapter.Name -AllowManagementOS:$true
-
 #Download VHD
 New-Item -Path "C:\VMs" -ItemType Directory
 Write-Output "C:\VMs Folder created."
@@ -39,6 +34,10 @@ try
 }
 $statusCode
 
+#Check vSwitch
+$netadapter = Get-NetAdapter -physical | where status -eq "up"
+Write-Host "Creating Virtual Switch using" $netadapter.Name "Adapter"
+New-VMSwitch -Name "External Network" -NetAdapterName $netadapter.Name -AllowManagementOS:$true
 
 #Create VM
 New-VM -Name Ubuntu -MemoryStartupBytes 16GB -VHDPath "C:\VMs\Ubuntu.vhdx"
