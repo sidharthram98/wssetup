@@ -1,38 +1,16 @@
 #Requirements
 # Windows Server Installed
+# Enable HyperV Role using Install-WindowsFeature -Name Hyper-V -IncludeManagementTools
+# Reboot
 # Nvidia Drivers Installed
+# Download VHD from: https://aniccaautomation.blob.core.windows.net/vhd/UbuntuTemplate.vhdx
 
 #Import Modules
 Import-Module Hyper-V
+
+#Set Environment Variables
 $VMName = "Ubuntu"
-
-#Enable HyperV
-Write-Output "Validating if Hyper-V is installed on host..."
-if(((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).State).Equals("Disable")) {
-    Write-Output "Enabling Hyper-V..."
-    Write-Output "This will restart your host."
-    Install-WindowsFeature -Name Hyper-V -IncludeManagementTools
-}
-else
-{
-    Write-Output "Hyper-V role detected."
-}
-
-#Download VHD
-New-Item -Path "C:\VMs" -ItemType Directory
-Write-Output "C:\VMs Folder created."
-Write-Output "Downloading Ubuntu VHD..."
-try 
-{
-    $response = Invoke-WebRequest -uri "https://aniccaautomation.blob.core.windows.net/vhd/UbuntuTemplate.vhdx" -OutFile "C:\VMs\Ubuntu.vhdx" -AsJob
-    $statusCode = $response.$statusCode
-
-} catch {
-    $statusCode = $_.Exception.Response.StatusCode.value__
-    Write-Output "Unable to download VHD from Source"
-    exit
-}
-$statusCode
+$vhdpath = "C:\VMs\Ubuntu.vhdx"
 
 #Check vSwitch
 $netadapter = Get-NetAdapter -physical | where status -eq "up"
@@ -40,7 +18,7 @@ Write-Host "Creating Virtual Switch using" $netadapter.Name "Adapter"
 New-VMSwitch -Name "External Network" -NetAdapterName $netadapter.Name -AllowManagementOS:$true
 
 #Create VM
-New-VM -Name Ubuntu -MemoryStartupBytes 16GB -VHDPath "C:\VMs\Ubuntu.vhdx"
+New-VM -Name $vmname -MemoryStartupBytes 16GB -VHDPath $vhdpath
 
 
 #Query Device Location
