@@ -115,7 +115,7 @@ cd $HOME/$GITOPS_REPO
 
 git checkout $GITOPS_BRANCH
 
-kubectl apply -f "clusters/$STORE_NAME/flux-system/controller.yaml" 
+kubectl apply -f "clusters/$STORE_NAME/flux-system/flux-system/controller.yaml" 
 sleep 3 
 
 flux create secret git gitops -n flux-system \
@@ -123,7 +123,7 @@ flux create secret git gitops -n flux-system \
 --password "$GITOPS_PAT" \
 --username gitops
 
-kubectl apply -k "clusters/$STORE_NAME/flux-system/" 
+kubectl apply -k "clusters/$STORE_NAME/flux-system/flux-system" 
 sleep 5
 
 flux reconcile source git gitops
