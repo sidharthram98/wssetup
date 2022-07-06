@@ -76,13 +76,14 @@ sudo ufw allow in on cni0 && sudo ufw allow out on cni0
 sudo ufw default allow routed
 
 echo "Disabling HA Cluster... This might take a while..."
-microk8s disable ha-cluster
+microk8s disable ha-cluster --force
 
 echo "Enabling GPU and Storage addons for MicroK8s..."
 microk8s enable gpu storage
 
 echo "Enabling Multus"
-microk8s enable multus
+
+microk8s enable community multus
 
 
 # Install Kubectl
@@ -131,6 +132,9 @@ printf '\n Flux installed successfully ✅\n'
 
 # Switching Back to Home Directory 
 cd $HOME
+
+# Create K8s Secrets to pull images from ghcr
+kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=$GITOPS_USER --docker-password=$GITHUB_PAT --docker-email=$GITOPS_EMAIL
 
 ##### ARC region ######
 
