@@ -134,7 +134,7 @@ printf '\n Flux installed successfully ✅\n'
 cd $HOME
 
 # Create K8s Secrets to pull images from ghcr
-kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=$GITOPS_USER --docker-password=$GITHUB_PAT --docker-email=$GITOPS_EMAIL
+kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=$GITOPS_USER --docker-password=$GITOPS_PAT --docker-email=$GITOPS_EMAIL
 
 ##### ARC region ######
 
