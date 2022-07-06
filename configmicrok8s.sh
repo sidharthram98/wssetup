@@ -76,14 +76,14 @@ sudo ufw allow in on cni0 && sudo ufw allow out on cni0
 sudo ufw default allow routed
 
 echo "Disabling HA Cluster... This might take a while..."
-microk8s disable ha-cluster --force
+sudo microk8s disable ha-cluster --force
 
 echo "Enabling GPU and Storage addons for MicroK8s..."
-microk8s enable gpu storage
+sudo microk8s enable gpu storage
 
 echo "Enabling Multus"
 
-microk8s enable community multus
+sudo microk8s enable community multus
 
 
 # Install Kubectl
