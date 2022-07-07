@@ -140,6 +140,7 @@ printf '\n Flux installed successfully ✅\n'
 cd $HOME
 
 # Create K8s Secrets to pull images from ghcr
+kubectl delete secret regcred --ignore-not-found
 kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=$GITOPS_USER --docker-password=$GITOPS_PAT --docker-email=$GITOPS_EMAIL
 
 ##### ARC region ######
@@ -165,6 +166,7 @@ printf "\n Connecting to Azure Arc 🚧 \n"
 az connectedk8s connect --name $STORE_NAME --resource-group $AZ_ARC_RESOURCEGROUP
 
 printf "\n Creating k8s-extension 🚧 \n"
+az extension add -n k8s-extension
 az k8s-extension create --cluster-name $STORE_NAME --resource-group $AZ_ARC_RESOURCEGROUP --cluster-type connectedClusters --extension-type Microsoft.AzureKeyVaultSecretsProvider --name $SECRET_PROVIDER_NAME
 
 printf "\n Verifying k8s-extension 🚧 \n"
