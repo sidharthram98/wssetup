@@ -134,7 +134,6 @@ flux create secret git gitops -n flux-system \
 kubectl apply -k "clusters/$STORE_NAME/flux-system/flux-system" 
 sleep 5
 
-flux reconcile source git gitops
 printf '\n Flux installed successfully ✅\n'
 
 # Switching Back to Home Directory 
