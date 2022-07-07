@@ -48,7 +48,7 @@ check_vars()
     return 0
 }
 
-check_vars STORE_NAME AZ_SP_ID AZ_SP_SECRET GITOPS_REPO GITOPS_PAT GITOPS_BRANCH AZ_ARC_RESOURCEGROUP AZ_ARC_RESOURCEGROUP_LOCATION AZ_KEYVAULT_SP_ID AZ_KEYVAULT_SP_SECRET SECRET_PROVIDER_NAME AZ_TEANANT_ID
+check_vars STORE_NAME AZ_SP_ID AZ_SP_SECRET GITOPS_REPO GITOPS_PAT GITOPS_BRANCH GITOPS_USER GITOPS_EMAIL AZ_ARC_RESOURCEGROUP AZ_ARC_RESOURCEGROUP_LOCATION AZ_KEYVAULT_SP_ID AZ_KEYVAULT_SP_SECRET SECRET_PROVIDER_NAME AZ_TEANANT_ID
 
 if command -v az -v >/dev/null; then
      printf "\n AZ CLI is present ✅ \n"
@@ -57,6 +57,13 @@ else
      exit
 fi
 
+echo "Installing Git..."
+if command -v git -v >/dev/null; then
+    printf "\n Git is already installed ✅ \n"
+else
+    sudo apt install git -y 
+    printf "\n Git installed successfully ✅ \n"
+fi
 
 echo "Installing Microk8s..."
 sudo systemctl start snapd.socket
@@ -76,13 +83,14 @@ sudo ufw allow in on cni0 && sudo ufw allow out on cni0
 sudo ufw default allow routed
 
 echo "Disabling HA Cluster... This might take a while..."
-microk8s disable ha-cluster
+sudo microk8s disable ha-cluster --force
 
 echo "Enabling GPU and Storage addons for MicroK8s..."
-microk8s enable gpu storage
+sudo microk8s enable gpu storage
 
 echo "Enabling Multus"
-microk8s enable multus
+
+sudo microk8s enable community multus
 
 
 # Install Kubectl
@@ -126,11 +134,14 @@ flux create secret git gitops -n flux-system \
 kubectl apply -k "clusters/$STORE_NAME/flux-system/flux-system" 
 sleep 5
 
-flux reconcile source git gitops
 printf '\n Flux installed successfully ✅\n'
 
 # Switching Back to Home Directory 
 cd $HOME
+
+# Create K8s Secrets to pull images from ghcr
+kubectl delete secret regcred --ignore-not-found
+kubectl create secret docker-registry regcred --docker-server=ghcr.io --docker-username=$GITOPS_USER --docker-password=$GITOPS_PAT --docker-email=$GITOPS_EMAIL
 
 ##### ARC region ######
 
@@ -155,6 +166,7 @@ printf "\n Connecting to Azure Arc 🚧 \n"
 az connectedk8s connect --name $STORE_NAME --resource-group $AZ_ARC_RESOURCEGROUP
 
 printf "\n Creating k8s-extension 🚧 \n"
+az extension add -n k8s-extension
 az k8s-extension create --cluster-name $STORE_NAME --resource-group $AZ_ARC_RESOURCEGROUP --cluster-type connectedClusters --extension-type Microsoft.AzureKeyVaultSecretsProvider --name $SECRET_PROVIDER_NAME
 
 printf "\n Verifying k8s-extension 🚧 \n"
