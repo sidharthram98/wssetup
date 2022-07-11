@@ -61,8 +61,8 @@ echo "Installing Git..."
 if command -v git -v >/dev/null; then
     printf "\n Git is already installed ✅ \n"
 else
-    sudo apt install git -y 
-    printf "\n Git installed successfully ✅ \n"
+    sudo apt install git curl -y 
+    printf "\n Git and curl installed successfully ✅ \n"
 fi
 
 echo "Installing Microk8s..."
