@@ -116,7 +116,7 @@ curl -s https://fluxcd.io/install.sh | sudo bash
 . <(flux completion bash)
 
 # Setup flux
-rm -rf $HOME/$GITOPS_REPO
+# rm -rf $HOME/$GITOPS_REPO
 git clone https://$GITOPS_PAT@github.com/$GITOPS_REPO $HOME/$GITOPS_REPO
 
 cd $HOME/$GITOPS_REPO
