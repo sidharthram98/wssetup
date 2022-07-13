@@ -14,4 +14,4 @@ sleep 5
 sudo microk8s ctr images rm ghcr.io/anicca-computer-vision-prod/cv_models_prod:$1
 echo "${1} Image removed 😎"
 
-bash configmicrok8s.sh
+cd $HOME && rm -rf aniccadeveloper && ./configmicrok8s.sh
