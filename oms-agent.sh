@@ -5,4 +5,4 @@ sudo snap install helm --classic
 helm repo add microsoft https://microsoft.github.io/charts/repo
 
 
-helm install $STORE_NAME --set omsagent.secret.wsid=635f4b18-56de-418e-a18a-b5a6f06bdd59,omsagent.secret.key=//LCLMRtqSB4VdI+5gKK+rogCJbzorSD+vW/ChaI/irM2eVQCq7XKu/PWBI/edepwGWhRspR68MaV4hPbY0wuQ==,omsagent.env.clusterName=oms_cluster microsoft/azuremonitor-containers
+helm install $STORE_NAME-logs --set omsagent.secret.wsid=a2a23cf2-b161-4631-85da-d9cf38e4553e,omsagent.secret.key=hymgpbf5F9EnVCiRzfojIDY0bMrHUtWC+oVro1XrREnTOOdjqq9Ga0lLZs8nWdICNsKYp8Zzkmjfhc1dKRLKSg==,omsagent.env.clusterName=oms_cluster microsoft/azuremonitor-containers
