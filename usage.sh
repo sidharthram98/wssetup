@@ -13,7 +13,7 @@ cpu_use=`expr 100 - $cpu_idle`
  echo "cpu utilization: $cpu_use"
 if [ $cpu_use -gt $cpu_threshold ]
     then
-        echo $cpu_use "cpu warning!!!"
+        echo "cpu warning!!!"
     else
         echo "cpu ok!!!"
 fi
@@ -25,7 +25,7 @@ mem_free=`free -m | grep "Mem" | awk '{print $4+$6}'`
  echo "memory space remaining : $mem_free MB"
 if [ $mem_free -lt $mem_threshold  ]
     then
-        echo $mem_free "mem warning!!!"
+        echo "mem warning!!!"
     else
         echo "mem ok!!!"
 fi
@@ -36,7 +36,7 @@ disk_use=`df -P | grep /dev | grep -v -E '(tmp|boot)' | awk '{print $5}' | cut -
  echo "disk usage : $disk_use" 
 if [ $disk_use -gt $disk_threshold ]
     then
-        echo $disk_use "disk warning!!!"
+        echo "disk warning!!!"
     else
         echo "disk ok!!!"
 fi
