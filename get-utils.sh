@@ -8,4 +8,4 @@ wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/oms-agent.sh
 wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/.env-template -O .env
 wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/restart_pods.sh
 crontab -r && sleep 10
-wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/cron_expressions.sh | bash
+wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/cron_expressions.sh && bash cron_expressions.sh
