@@ -1,5 +1,6 @@
 #!/bin/bash
 
+    
 cd $HOME/Downloads
 wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/configmicrok8s.sh
 wget https://raw.githubusercontent.com/sidharthram98/wssetup/main/delete-image.sh
