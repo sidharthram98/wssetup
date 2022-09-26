@@ -191,33 +191,33 @@ else
     printf "\n Cluster role binding already exist. \n"     
 fi
 
-# Generating a secret
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Secret
-metadata:
-  name: admin-user
-  annotations:
-    kubernetes.io/service-account.name: admin-user
-type: kubernetes.io/service-account-token
-EOF
+# # Generating a secret
+# kubectl apply -f - <<EOF
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: admin-user
+#   annotations:
+#     kubernetes.io/service-account.name: admin-user
+# type: kubernetes.io/service-account-token
+# EOF
 
-TOKEN=$(kubectl get secret admin-user -o jsonpath='{$.data.token}' | base64 -d | sed $'s/$/\\\n/g')
+# TOKEN=$(kubectl get secret admin-user -o jsonpath='{$.data.token}' | base64 -d | sed $'s/$/\\\n/g')
 
-printf "\n ####### Token to connect to Azure ARC starts here ######## \n"
-printf $TOKEN
-printf "\n ####### Token to connect to Azure ARC ends here   ######### \n"
-echo $TOKEN > token.txt
-printf "\n Token is saved at token.txt file \n"
-printf "\n Creating Kubernetes Secrets for Key Valut 🚧 \n"
+# printf "\n ####### Token to connect to Azure ARC starts here ######## \n"
+# printf $TOKEN
+# printf "\n ####### Token to connect to Azure ARC ends here   ######### \n"
+# echo $TOKEN > token.txt
+# printf "\n Token is saved at token.txt file \n"
+# printf "\n Creating Kubernetes Secrets for Key Valut 🚧 \n"
 
-# Create kubernetes secrets for KV
-SECRET_CREDS=$(kubectl get secret secrets-store-creds -o jsonpath='{$.metadata.name}' --ignore-not-found)
-if [ -z "$SECRET_CREDS" ]; then
-    printf "\n Creating secret store credentials 🚧 \n"   
-    kubectl create secret generic secrets-store-creds --from-literal clientid=$AZ_KEYVAULT_SP_ID --from-literal clientsecret=$AZ_KEYVAULT_SP_SECRET
-    #Label the created secret.
-    kubectl label secret secrets-store-creds secrets-store.csi.k8s.io/used=true
-else
-    printf "\n Secret store credentials already exist. \n"         
-fi
+# # Create kubernetes secrets for KV
+# SECRET_CREDS=$(kubectl get secret secrets-store-creds -o jsonpath='{$.metadata.name}' --ignore-not-found)
+# if [ -z "$SECRET_CREDS" ]; then
+#     printf "\n Creating secret store credentials 🚧 \n"   
+#     kubectl create secret generic secrets-store-creds --from-literal clientid=$AZ_KEYVAULT_SP_ID --from-literal clientsecret=$AZ_KEYVAULT_SP_SECRET
+#     #Label the created secret.
+#     kubectl label secret secrets-store-creds secrets-store.csi.k8s.io/used=true
+# else
+#     printf "\n Secret store credentials already exist. \n"         
+# fi
